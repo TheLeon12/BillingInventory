@@ -32,6 +32,9 @@ public static class DependencyInjection
 
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 
+        // Chequeo de disponibilidad: etiqueta "ready" para distinguirlo del chequeo de vida (/health).
+        services.AddHealthChecks().AddDbContextCheck<AppDbContext>("database", tags: ["ready"]);
+
         return services;
     }
 }

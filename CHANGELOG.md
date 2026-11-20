@@ -11,6 +11,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 - Bloque 1.3: Serilog (consola y archivo JSON), `CorrelationIdMiddleware`, `GlobalExceptionHandler` con `ProblemDetails`, excepciones tipadas (`NotFoundException`, `ConflictException`, `BusinessRuleException`), pruebas del pipeline de errores y ADR-003.
 
+- Bloque 1.4: Swagger/OpenAPI (Swashbuckle) con comentarios XML y esquema Bearer, solo en Development; endpoints `/health` y `/health/ready`; pruebas de integración.
+
+- Bloque 1.5: paginación, filtros y ordenamiento compartidos (`PagedQuery`, `PagedResult<T>`, `SortMap<T>`, `WhereIf`, `ToPagedResultAsync`), registro de validadores de Application, enumeraciones como texto en JSON, pruebas unitarias y de integración con SQL Server, y ADR-004.
+
 ### Cambiado
 - `appsettings*.json`: la sección `Logging` se reemplaza por `Serilog`.
 

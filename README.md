@@ -54,6 +54,41 @@ dotnet test
 
 Las pruebas de integración levantan su propio SQL Server en Docker (Testcontainers), por lo que Docker debe estar en ejecución. No usan tu base de datos de desarrollo.
 
+## Swagger y salud
+
+- **Swagger UI:** con la API en ejecución y `ASPNETCORE_ENVIRONMENT=Development` (perfil por defecto), abre `https://localhost:7257/` (redirige a `/swagger`). El JSON de OpenAPI está en `/swagger/v1/swagger.json`. En Producción Swagger no se publica.
+- **Autenticación en Swagger:** el esquema Bearer (JWT) ya está definido; el botón *Authorize* se activa con los endpoints protegidos del Sprint 2.
+- **Documentación:** los comentarios XML de `Api` y `Application` se incluyen automáticamente.
+- **`GET /health`:** la API está viva (no consulta la base de datos).
+- **`GET /health/ready`:** verifica la conexión a la base de datos; responde `503` si falla.
+
+## Paginación, filtros y orden
+
+Todos los listados aceptan los mismos parámetros en la query string:
+
+| Parámetro | Descripción | Por defecto |
+|---|---|---|
+| `page` | Número de página (desde 1) | `1` |
+| `pageSize` | Elementos por página (1 a 100) | `20` |
+| `sortBy` | Campo de orden (lista blanca por listado) | definido por el listado |
+| `sortDirection` | `asc` o `desc` | definido por el listado |
+
+Cada listado añade sus propios filtros. Ejemplo de respuesta:
+
+```json
+{
+  "items": [ { "id": 11, "name": "W11" } ],
+  "page": 2,
+  "pageSize": 10,
+  "totalCount": 25,
+  "totalPages": 3,
+  "hasPrevious": true,
+  "hasNext": true
+}
+```
+
+Un `sortBy` no permitido o un `pageSize` fuera de rango devuelve `400` con el detalle por campo. Las enumeraciones se envían y reciben como texto.
+
 ## Errores y logs
 
 - Todos los errores se devuelven como `application/problem+json` con `status`, `title`, `detail`, `traceId` y `correlationId`. Los errores de validación incluyen `errors` por campo.
@@ -98,3 +133,4 @@ erDiagram
 - [ADR-001: Arquitectura en capas](docs/decisiones/ADR-001-arquitectura-en-capas.md)
 - [ADR-002: EF Core Code First con SQL Server](docs/decisiones/ADR-002-ef-core-code-first.md)
 - [ADR-003: Manejo centralizado de errores y logging](docs/decisiones/ADR-003-errores-y-logging.md)
+- [ADR-004: Paginación, filtros y ordenamiento](docs/decisiones/ADR-004-paginacion-y-ordenamiento.md)

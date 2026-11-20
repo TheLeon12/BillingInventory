@@ -1,5 +1,8 @@
 ﻿using System.Globalization;
+using System.Text.Json.Serialization;
+using BillingInventory.Api.Extensions;
 using BillingInventory.Api.Middleware;
+using BillingInventory.Application;
 using BillingInventory.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -18,8 +21,13 @@ try
         .ReadFrom.Services(services)
         .Enrich.FromLogContext());
 
+    builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
-    builder.Services.AddControllers();
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+            // Enumeraciones como texto ("Desc", "Emitida") en lugar de números: más legible para los clientes.
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    builder.Services.AddSwaggerDocs();
 
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails(options =>
@@ -39,9 +47,16 @@ try
     app.UseSerilogRequestLogging();
     app.UseExceptionHandler();
     app.UseStatusCodePages();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwaggerDocs();
+    }
+
     app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapHealthEndpoints();
 
     app.Run();
 }
