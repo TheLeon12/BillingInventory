@@ -15,6 +15,8 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 - Bloque 1.5: paginación, filtros y ordenamiento compartidos (`PagedQuery`, `PagedResult<T>`, `SortMap<T>`, `WhereIf`, `ToPagedResultAsync`), registro de validadores de Application, enumeraciones como texto en JSON, pruebas unitarias y de integración con SQL Server, y ADR-004.
 
+- Bloque 2.1: entidades `User` y `Role` con roles sembrados (`Admin`, `Vendedor`, `Almacen`), `IPasswordHasher` con PBKDF2 de Identity, migración `AddUsersAndRoles`, pruebas de hash, auditoría, índice único y concurrencia, y ADR-005.
+
 ### Cambiado
 - `appsettings*.json`: la sección `Logging` se reemplaza por `Serilog`.
 

@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\BillingInventory.Domain\BillingInventory.Domain.csproj" />
     <ProjectReference Include="..\..\src\BillingInventory.Application\BillingInventory.Application.csproj" />
+    <ProjectReference Include="..\..\src\BillingInventory.Infrastructure\BillingInventory.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

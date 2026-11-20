@@ -1,5 +1,6 @@
 using BillingInventory.Application.Abstractions;
 using BillingInventory.Infrastructure.Persistence;
+using BillingInventory.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ public static class DependencyInjection
                 "Falta ConnectionStrings:DefaultConnection. Configúrela con user-secrets (ver README).");
 
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<IPasswordHasher, IdentityPasswordHasher>();
 
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
             connectionString,

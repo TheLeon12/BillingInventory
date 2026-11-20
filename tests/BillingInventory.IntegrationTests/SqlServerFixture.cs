@@ -17,12 +17,13 @@ public sealed class SqlServerFixture : IAsyncLifetime
     public string ConnectionString => _container.GetConnectionString();
 
     /// <summary>Crea un contexto nuevo apuntando al contenedor.</summary>
-    public AppDbContext CreateContext()
+    /// <param name="clock">Reloj a usar; por defecto el del sistema.</param>
+    public AppDbContext CreateContext(TimeProvider? clock = null)
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseSqlServer(ConnectionString)
             .Options;
-        return new AppDbContext(options, TimeProvider.System);
+        return new AppDbContext(options, clock ?? TimeProvider.System);
     }
 
     /// <inheritdoc />

@@ -1,5 +1,6 @@
 using BillingInventory.Application.Abstractions;
 using BillingInventory.Domain.Common;
+using BillingInventory.Domain.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace BillingInventory.Infrastructure.Persistence;
@@ -13,6 +14,12 @@ namespace BillingInventory.Infrastructure.Persistence;
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options, TimeProvider clock)
     : DbContext(options), IAppDbContext
 {
+    /// <inheritdoc />
+    public DbSet<User> Users => Set<User>();
+
+    /// <inheritdoc />
+    public DbSet<Role> Roles => Set<Role>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

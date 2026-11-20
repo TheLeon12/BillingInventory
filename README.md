@@ -116,17 +116,32 @@ Dependencias entre capas: `Api → Application, Infrastructure`; `Infrastructure
 
 ## Modelo de datos
 
-Todas las entidades heredan de `BaseEntity`. Se irán agregando tablas desde el Sprint 2.
+Todas las entidades heredan de `BaseEntity` (`Id`, `CreatedAtUtc`, `UpdatedAtUtc`, `RowVersion`); en el diagrama solo se muestran los campos propios de cada tabla.
 
 ```mermaid
 erDiagram
-    BaseEntity {
+    Role ||--o{ User : "tiene"
+    Role {
         int Id PK
-        datetime CreatedAtUtc
-        datetime UpdatedAtUtc "nullable"
-        rowversion RowVersion "concurrencia optimista"
+        string Name UK "Admin, Vendedor, Almacen"
+    }
+    User {
+        int Id PK
+        string Email UK "minusculas"
+        string FullName
+        string PasswordHash "nunca texto plano"
+        bool IsActive
+        int RoleId FK
     }
 ```
+
+### Roles
+
+| Rol | Uso previsto |
+|---|---|
+| `Admin` | Acceso total y gestión de usuarios |
+| `Vendedor` | Clientes y facturas (rol del registro público) |
+| `Almacen` | Productos e inventario |
 
 ## Decisiones de arquitectura
 
@@ -134,3 +149,4 @@ erDiagram
 - [ADR-002: EF Core Code First con SQL Server](docs/decisiones/ADR-002-ef-core-code-first.md)
 - [ADR-003: Manejo centralizado de errores y logging](docs/decisiones/ADR-003-errores-y-logging.md)
 - [ADR-004: Paginación, filtros y ordenamiento](docs/decisiones/ADR-004-paginacion-y-ordenamiento.md)
+- [ADR-005: Usuarios, roles y hash de contraseñas](docs/decisiones/ADR-005-usuarios-roles-y-contrasenas.md)
