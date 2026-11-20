@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BillingInventory.Api/BillingInventory.Api.csproj" />
+    <Project Path="src/BillingInventory.Application/BillingInventory.Application.csproj" />
+    <Project Path="src/BillingInventory.Domain/BillingInventory.Domain.csproj" />
+    <Project Path="src/BillingInventory.Infrastructure/BillingInventory.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BillingInventory.IntegrationTests/BillingInventory.IntegrationTests.csproj" />
+    <Project Path="tests/BillingInventory.UnitTests/BillingInventory.UnitTests.csproj" />
+  </Folder>
+</Solution>
