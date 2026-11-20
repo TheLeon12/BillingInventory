@@ -397,3 +397,4 @@ dotnet_diagnostic.CS1591.severity = none
 # Se permite ILogger.LogXxx con plantillas: el costo de LoggerMessage no se justifica en esta API.
 [*.cs]
 dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1873.severity = none

@@ -44,6 +44,7 @@ public static class SwaggerExtensions
                 BearerFormat = "JWT",
                 Description = "Token JWT obtenido en el login. Pegue solo el token, sin el prefijo \"Bearer\".",
             });
+            options.OperationFilter<BearerSecurityOperationFilter>();
         });
 
         return services;

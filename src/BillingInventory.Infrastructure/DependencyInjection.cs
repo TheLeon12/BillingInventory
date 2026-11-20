@@ -28,6 +28,13 @@ public static class DependencyInjection
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IPasswordHasher, IdentityPasswordHasher>();
 
+        // ValidateOnStart: una clave ausente o corta debe impedir el arranque, no fallar en el primer login.
+        services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .ValidateDataAnnotations() // incluye la regla de longitud de clave de JwtOptions
+            .ValidateOnStart();
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
             connectionString,
             sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));

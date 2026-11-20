@@ -28,7 +28,13 @@ La contraseña debe cumplir la política de SQL Server (8+ caracteres, mayúscul
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=BillingInventory;User Id=sa;Password=<TU_PASSWORD>;TrustServerCertificate=True" --project src/BillingInventory.Api
 ```
 
-Las claves `Jwt:Issuer`, `Jwt:Audience` y `Jwt:Key` se configuran de la misma forma (se usan desde el Sprint 2).
+Las claves JWT se configuran de la misma forma. `Jwt:Key` debe tener **al menos 32 caracteres**; si falta o es corta, la API no arranca.
+
+```powershell
+dotnet user-secrets set "Jwt:Issuer" "BillingInventory" --project src/BillingInventory.Api
+dotnet user-secrets set "Jwt:Audience" "BillingInventory.Clients" --project src/BillingInventory.Api
+dotnet user-secrets set "Jwt:Key" "<CLAVE_ALEATORIA_DE_AL_MENOS_32_CARACTERES>" --project src/BillingInventory.Api
+```
 
 ### 3. Migraciones
 
@@ -57,10 +63,28 @@ Las pruebas de integración levantan su propio SQL Server en Docker (Testcontain
 ## Swagger y salud
 
 - **Swagger UI:** con la API en ejecución y `ASPNETCORE_ENVIRONMENT=Development` (perfil por defecto), abre `https://localhost:7257/` (redirige a `/swagger`). El JSON de OpenAPI está en `/swagger/v1/swagger.json`. En Producción Swagger no se publica.
-- **Autenticación en Swagger:** el esquema Bearer (JWT) ya está definido; el botón *Authorize* se activa con los endpoints protegidos del Sprint 2.
+- **Autenticación en Swagger:** el botón *Authorize* guarda el token JWT y lo envía solo en los endpoints marcados con candado.
 - **Documentación:** los comentarios XML de `Api` y `Application` se incluyen automáticamente.
 - **`GET /health`:** la API está viva (no consulta la base de datos).
 - **`GET /health/ready`:** verifica la conexión a la base de datos; responde `503` si falla.
+
+## Autenticación
+
+| Endpoint | Acceso | Descripción |
+|---|---|---|
+| `POST /api/auth/register` | Público | Crea un usuario con rol `Vendedor` |
+| `POST /api/auth/login` | Público | Devuelve un token JWT |
+| `GET /api/auth/me` | Autenticado | Devuelve el usuario según el token |
+
+Flujo de prueba en Swagger:
+
+1. `POST /api/auth/register` con `{ "email": "maria.perez@ejemplo.com", "fullName": "María Pérez", "password": "Clave#2026" }`.
+2. `POST /api/auth/login` con el correo y la contraseña; copia el valor de `accessToken`.
+3. Pulsa **Authorize**, pega el token (sin la palabra `Bearer`) y prueba `GET /api/auth/me`.
+
+Contraseña: 8 a 128 caracteres con mayúscula, minúscula y número. Login y registro permiten 10 intentos por minuto por IP (`RateLimiting:AuthPermitPerMinute`); al superarlo responden `429`. Detrás de un proxy inverso hay que configurar las cabeceras reenviadas para que el límite use la IP real.
+
+Los roles `Admin` y `Almacen` los asigna un administrador (bloque 2.3).
 
 ## Paginación, filtros y orden
 
@@ -150,3 +174,4 @@ erDiagram
 - [ADR-003: Manejo centralizado de errores y logging](docs/decisiones/ADR-003-errores-y-logging.md)
 - [ADR-004: Paginación, filtros y ordenamiento](docs/decisiones/ADR-004-paginacion-y-ordenamiento.md)
 - [ADR-005: Usuarios, roles y hash de contraseñas](docs/decisiones/ADR-005-usuarios-roles-y-contrasenas.md)
+- [ADR-006: Autenticación con JWT](docs/decisiones/ADR-006-autenticacion-jwt.md)

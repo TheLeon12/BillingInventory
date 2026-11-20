@@ -27,6 +27,8 @@ try
         .AddJsonOptions(options =>
             // Enumeraciones como texto ("Desc", "Emitida") en lugar de números: más legible para los clientes.
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    builder.Services.AddJwtAuthentication();
+    builder.Services.AddAuthRateLimiting(builder.Configuration);
     builder.Services.AddSwaggerDocs();
 
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -54,6 +56,8 @@ try
     }
 
     app.UseHttpsRedirection();
+    app.UseRateLimiter();
+    app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
     app.MapHealthEndpoints();

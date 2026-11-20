@@ -25,6 +25,11 @@ public sealed class GlobalExceptionHandler(
         var problem = Map(exception);
         httpContext.Response.StatusCode = problem.Status ?? StatusCodes.Status500InternalServerError;
 
+        if (problem.Status == StatusCodes.Status401Unauthorized)
+        {
+            httpContext.Response.Headers.WWWAuthenticate = "Bearer";
+        }
+
         if (problem.Status >= 500)
         {
             logger.LogError(exception, "Excepción no controlada procesando {Method} {Path}",
@@ -55,6 +60,7 @@ public sealed class GlobalExceptionHandler(
             Title = "Error de validación",
             Detail = "Uno o más campos no son válidos.",
         },
+        InvalidCredentialsException invalid => Create(StatusCodes.Status401Unauthorized, "Credenciales inválidas", invalid.Message),
         NotFoundException notFound => Create(StatusCodes.Status404NotFound, "Recurso no encontrado", notFound.Message),
         ConflictException conflict => Create(StatusCodes.Status409Conflict, "Conflicto", conflict.Message),
         DbUpdateConcurrencyException => Create(
