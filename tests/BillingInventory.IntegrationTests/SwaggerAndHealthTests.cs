@@ -42,9 +42,13 @@ public sealed class SwaggerAndHealthTests(SqlServerFixture sql)
         await using var factory = new ApiFactory();
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/swagger/v1/swagger.json");
+        var anonymous = await client.GetAsync("/swagger/v1/swagger.json");
+        var authenticated = await client.SendAsync(
+            Security.TestTokens.Get("/swagger/v1/swagger.json", Security.TestTokens.For("Admin")));
 
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        // Anónimo: 401 (no se revela qué rutas existen). Con token: 404 porque Swagger no se publica.
+        Assert.Equal(HttpStatusCode.Unauthorized, anonymous.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, authenticated.StatusCode);
     }
 
     [Fact]

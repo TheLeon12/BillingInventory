@@ -2,12 +2,14 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using BillingInventory.Application.Common.Paging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillingInventory.IntegrationTests.Paging;
 
 /// <summary>Controlador solo para pruebas: devuelve la consulta tal como la enlazó MVC.</summary>
 [ApiController]
+[AllowAnonymous]
 [Route("test-paging")]
 public sealed class PagingTestController : ControllerBase
 {

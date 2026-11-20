@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text.Json.Serialization;
+using BillingInventory.Api.Authorization;
 using BillingInventory.Api.Extensions;
 using BillingInventory.Api.Middleware;
 using BillingInventory.Application;
@@ -28,6 +29,7 @@ try
             // Enumeraciones como texto ("Desc", "Emitida") en lugar de números: más legible para los clientes.
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
     builder.Services.AddJwtAuthentication();
+    builder.Services.AddAppAuthorization();
     builder.Services.AddAuthRateLimiting(builder.Configuration);
     builder.Services.AddSwaggerDocs();
 

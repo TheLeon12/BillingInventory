@@ -84,7 +84,33 @@ Flujo de prueba en Swagger:
 
 Contraseña: 8 a 128 caracteres con mayúscula, minúscula y número. Login y registro permiten 10 intentos por minuto por IP (`RateLimiting:AuthPermitPerMinute`); al superarlo responden `429`. Detrás de un proxy inverso hay que configurar las cabeceras reenviadas para que el límite use la IP real.
 
-Los roles `Admin` y `Almacen` los asigna un administrador (bloque 2.3).
+Los roles `Admin` y `Almacen` los asigna un administrador con `PUT /api/users/{id}/role`.
+
+### Autorización por rol
+
+Todo endpoint exige autenticación salvo los marcados como públicos. Permisos por política (el Admin siempre tiene acceso):
+
+| Política | Admin | Vendedor | Almacén |
+|---|:-:|:-:|:-:|
+| `AdminOnly` (gestión de usuarios) | ✔ | | |
+| `ManageCustomers` | ✔ | ✔ | |
+| `ManageProducts` | ✔ | | ✔ |
+| `ManageInventory` | ✔ | | ✔ |
+| `ManageInvoices` | ✔ | ✔ | |
+| `ViewReports` | ✔ | ✔ | |
+
+Sin token se responde `401`; con token pero sin permiso, `403`. Una ruta inexistente consultada sin token también responde `401`.
+
+### Gestión de usuarios (solo Admin)
+
+| Endpoint | Descripción |
+|---|---|
+| `GET /api/users` | Lista paginada. Filtros: `search`, `role`, `isActive`. Orden: `email`, `fullName`, `role`, `createdAt` |
+| `GET /api/users/{id}` | Detalle |
+| `PUT /api/users/{id}/role` | Cambia el rol: `{ "role": "Almacen" }` |
+| `PUT /api/users/{id}/status` | Activa o desactiva: `{ "isActive": false }` |
+
+Un admin no puede cambiar su propio rol ni desactivarse. El cambio de rol aplica al siguiente login: el token ya emitido conserva el rol anterior hasta expirar.
 
 ## Paginación, filtros y orden
 
@@ -175,3 +201,4 @@ erDiagram
 - [ADR-004: Paginación, filtros y ordenamiento](docs/decisiones/ADR-004-paginacion-y-ordenamiento.md)
 - [ADR-005: Usuarios, roles y hash de contraseñas](docs/decisiones/ADR-005-usuarios-roles-y-contrasenas.md)
 - [ADR-006: Autenticación con JWT](docs/decisiones/ADR-006-autenticacion-jwt.md)
+- [ADR-007: Autorización por políticas](docs/decisiones/ADR-007-autorizacion-por-politicas.md)

@@ -1,4 +1,5 @@
 using BillingInventory.Application.Auth;
+using BillingInventory.Application.Users;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserManagementService, UserManagementService>();
         return services;
     }
 }

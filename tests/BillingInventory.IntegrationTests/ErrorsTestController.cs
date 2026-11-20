@@ -1,6 +1,7 @@
 using BillingInventory.Application.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace BillingInventory.IntegrationTests;
 
 /// <summary>Endpoints solo para pruebas: cada uno lanza un tipo de excepción.</summary>
 [ApiController]
+[AllowAnonymous]
 [Route("test-errors")]
 public sealed class ErrorsTestController : ControllerBase
 {

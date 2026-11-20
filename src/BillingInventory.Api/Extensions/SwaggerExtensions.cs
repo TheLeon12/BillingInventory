@@ -65,7 +65,7 @@ public static class SwaggerExtensions
             options.DisplayRequestDuration();
         });
 
-        app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
+        app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription().AllowAnonymous();
 
         return app;
     }

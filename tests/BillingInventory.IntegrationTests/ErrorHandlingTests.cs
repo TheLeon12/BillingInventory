@@ -54,11 +54,21 @@ public sealed class ErrorHandlingTests(ApiFactory factory) : IClassFixture<ApiFa
     }
 
     [Fact]
-    public async Task UnknownRoute_ReturnsProblemDetails404()
+    public async Task UnknownRoute_Authenticated_ReturnsProblemDetails404()
+    {
+        var request = Security.TestTokens.Get("/does-not-exist", Security.TestTokens.For("Vendedor"));
+        var response = await _client.SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task UnknownRoute_Anonymous_Returns401SoRoutesAreNotRevealed()
     {
         var response = await _client.GetAsync("/does-not-exist");
 
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 

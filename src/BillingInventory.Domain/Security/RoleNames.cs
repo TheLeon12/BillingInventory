@@ -14,4 +14,13 @@ public static class RoleNames
 
     /// <summary>Almacén: gestiona productos e inventario.</summary>
     public const string Warehouse = "Almacen";
+
+    /// <summary>Todos los roles válidos del sistema.</summary>
+    public static readonly IReadOnlyList<string> All = [Admin, Seller, Warehouse];
+
+    /// <summary>Devuelve el nombre canónico de un rol ignorando mayúsculas, o <c>null</c> si no existe.</summary>
+    /// <param name="name">Nombre recibido.</param>
+    /// <returns>El nombre canónico (por ejemplo, <c>"Admin"</c> para <c>"admin"</c>) o <c>null</c>.</returns>
+    public static string? Normalize(string? name) =>
+        All.FirstOrDefault(r => string.Equals(r, name?.Trim(), StringComparison.OrdinalIgnoreCase));
 }

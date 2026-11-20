@@ -19,7 +19,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 - Bloque 2.2: registro, login y `GET /api/auth/me` con JWT Bearer; `AuthService`, `JwtTokenGenerator`, validación de `JwtOptions` al arrancar, límite de intentos por IP, respuesta 401 uniforme con `WWW-Authenticate`, filtro de Swagger que marca solo los endpoints protegidos, pruebas unitarias y de integración, y ADR-006.
 
+- Bloque 2.3: políticas de autorización por rol (`Policies`), política por defecto que exige autenticación, y administración de usuarios para el Admin (`/api/users`: listar con filtros y paginación, detalle, cambio de rol y activar/desactivar) con protección contra auto-bloqueo; pruebas de la matriz rol × política y de los endpoints; ADR-007.
+
 ### Cambiado
+- Una ruta inexistente consultada sin token responde 401 en lugar de 404 (política por defecto).
 - `appsettings*.json`: la sección `Logging` se reemplaza por `Serilog`.
 
 ### Eliminado
