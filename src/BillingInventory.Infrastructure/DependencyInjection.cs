@@ -1,6 +1,7 @@
 using BillingInventory.Application.Abstractions;
 using BillingInventory.Infrastructure.Persistence;
 using BillingInventory.Infrastructure.Security;
+using BillingInventory.Infrastructure.Seeding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,10 @@ public static class DependencyInjection
             .ValidateDataAnnotations() // incluye la regla de longitud de clave de JwtOptions
             .ValidateOnStart();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        services.Configure<SeedOptions>(configuration.GetSection(SeedOptions.SectionName));
+        services.AddScoped<AdminSeeder>();
+        services.AddHostedService<AdminSeedHostedService>();
 
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
             connectionString,

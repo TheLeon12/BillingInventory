@@ -30,9 +30,17 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     /// <summary>Intentos por minuto permitidos en login y registro. Alto por defecto para no interferir.</summary>
     public int AuthPermitPerMinute { get; init; } = 1000;
 
+    /// <summary>Valores de configuración adicionales (por ejemplo, la sección <c>Seed</c>).</summary>
+    public IReadOnlyDictionary<string, string> ExtraSettings { get; init; } = new Dictionary<string, string>();
+
     /// <inheritdoc />
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        foreach (var (key, value) in ExtraSettings)
+        {
+            builder.UseSetting(key, value);
+        }
+
         // Production: así se comprueba el comportamiento real ante errores (sin detalles internos).
         builder.UseEnvironment("Production");
         builder.UseSetting("ConnectionStrings:DefaultConnection", ConnectionString);

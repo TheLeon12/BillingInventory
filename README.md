@@ -36,7 +36,18 @@ dotnet user-secrets set "Jwt:Audience" "BillingInventory.Clients" --project src/
 dotnet user-secrets set "Jwt:Key" "<CLAVE_ALEATORIA_DE_AL_MENOS_32_CARACTERES>" --project src/BillingInventory.Api
 ```
 
-### 3. Migraciones
+### 3. Primer administrador
+
+Con una base nueva no hay administradores. Define estos secretos y la API crea el primero al arrancar (la contraseña debe cumplir la política: 8 a 128 caracteres con mayúscula, minúscula y número):
+
+```powershell
+dotnet user-secrets set "Seed:AdminEmail" "<CORREO_DEL_ADMIN>" --project src/BillingInventory.Api
+dotnet user-secrets set "Seed:AdminPassword" "<CONTRASENA_DEL_ADMIN>" --project src/BillingInventory.Api
+```
+
+Reglas: solo se crea si no existe ningún administrador, nunca resetea contraseñas ni asciende cuentas existentes, y una configuración inválida impide el arranque. Aplica las migraciones **antes** de arrancar. Una vez creado, puedes borrar estos secretos. Detalles en el [ADR-008](docs/decisiones/ADR-008-administrador-inicial.md).
+
+### 4. Migraciones
 
 Aplicar las migraciones a la base de datos configurada:
 
@@ -50,7 +61,7 @@ Crear una migración nueva tras cambiar entidades:
 dotnet ef migrations add <Nombre> --project src/BillingInventory.Infrastructure --startup-project src/BillingInventory.Api --output-dir Persistence/Migrations
 ```
 
-### 4. Ejecutar y probar
+### 5. Ejecutar y probar
 
 ```powershell
 dotnet build
@@ -202,3 +213,4 @@ erDiagram
 - [ADR-005: Usuarios, roles y hash de contraseñas](docs/decisiones/ADR-005-usuarios-roles-y-contrasenas.md)
 - [ADR-006: Autenticación con JWT](docs/decisiones/ADR-006-autenticacion-jwt.md)
 - [ADR-007: Autorización por políticas](docs/decisiones/ADR-007-autorizacion-por-politicas.md)
+- [ADR-008: Administrador inicial](docs/decisiones/ADR-008-administrador-inicial.md)

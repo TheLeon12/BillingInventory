@@ -21,6 +21,8 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 - Bloque 2.3: políticas de autorización por rol (`Policies`), política por defecto que exige autenticación, y administración de usuarios para el Admin (`/api/users`: listar con filtros y paginación, detalle, cambio de rol y activar/desactivar) con protección contra auto-bloqueo; pruebas de la matriz rol × política y de los endpoints; ADR-007.
 
+- Bloque 2.4: administrador inicial desde user-secrets (`Seed:AdminEmail`, `Seed:AdminPassword`) mediante `AdminSeeder` y un servicio de arranque; idempotente, sin ascender cuentas existentes y sin consultar la base si no hay configuración; pruebas de reglas y de arranque de la API; ADR-008.
+
 ### Cambiado
 - Una ruta inexistente consultada sin token responde 401 en lugar de 404 (política por defecto).
 - `appsettings*.json`: la sección `Logging` se reemplaza por `Serilog`.
